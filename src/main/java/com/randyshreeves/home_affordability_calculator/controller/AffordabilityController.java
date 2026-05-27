@@ -1,5 +1,7 @@
 package com.randyshreeves.home_affordability_calculator.controller;
 
+import com.randyshreeves.home_affordability_calculator.dto.AffordabilityRequest;
+import com.randyshreeves.home_affordability_calculator.dto.AffordabilityResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -9,7 +11,9 @@ import java.util.Map;
 public class AffordabilityController {
 
     @PostMapping("/calculate")
-    public Map<String, Object> calculateAffordability(@RequestBody Map<String, Object> request) {
-        return Map.of("message", "Route is working", "receivedData", request);
+    public AffordabilityResponse calculateAffordability(@RequestBody AffordabilityRequest request) {
+        System.out.println("Monthly Payment: " + request.getMonthlyPayment());
+        System.out.println("Interest Rate: " + request.getInterestRate());
+        return new AffordabilityResponse(425000);
     }
 }
