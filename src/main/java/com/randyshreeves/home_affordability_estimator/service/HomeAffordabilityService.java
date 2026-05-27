@@ -27,31 +27,37 @@ public class HomeAffordabilityService {
     public HomeAffordabilityResponse calculateAffordability(HomeAffordabilityRequest request) {
         double monthlyPayment = request.getMonthlyPayment();
         double downPayment = request.getDownPayment();
-        double interestRate = request.getInterestRate() / 100 / 12;
+        double monthlyInterestRate = request.getInterestRate() / 100 / 12;
         int loanTermMonths = request.getLoanTermYears() * 12;
-        double maxHomePrice;
-        double numerator = calculateNumerator(interestRate, loanTermMonths);
-        double denominator = calculateDenominator(interestRate, loanTermMonths);
-
-        if (monthlyPayment < 0) { // handle edge case if user enters negative desired monthly payment
-            maxHomePrice = 0;
-        } else if (numerator == 0) { // handle edge case if user enters 0% interest rate
-            maxHomePrice = monthlyPayment * loanTermMonths + downPayment;
-        } else {
-            maxHomePrice = ((monthlyPayment * denominator) / numerator) + downPayment;
-        }
-
-        maxHomePrice = Math.round(maxHomePrice);
+        double maxHomePrice = calculateMaxHomePrice(monthlyPayment, downPayment, monthlyInterestRate, loanTermMonths);
         return new HomeAffordabilityResponse(maxHomePrice);
     }
 
+    private double calculateMaxHomePrice(double monthlyPayment,
+                                         double downPayment,
+                                         double monthlyInterestRate,
+                                         int loanTermMonths) {
+        if (monthlyPayment < 0) { // handle edge case if user enters negative desired monthly payment
+            return 0;
+        }
+        double numerator = calculateNumerator(monthlyInterestRate, loanTermMonths);
+        double denominator = calculateDenominator(monthlyInterestRate, loanTermMonths);
+        double loanAmount;
+        if (numerator == 0) { // handle edge case if user enters 0% interest rate
+            loanAmount = monthlyPayment * loanTermMonths;
+        } else {
+            loanAmount = (monthlyPayment * denominator) / numerator;
+        }
+        return Math.round(loanAmount + downPayment);
+    }
+
     // Numerator of mortgage amortization formula: r(1+r)^n
-    private double calculateNumerator(double interestRate, int loanTermMonths) {
-        return interestRate * Math.pow((1 + interestRate), loanTermMonths);
+    private double calculateNumerator(double monthlyInterestRate, int loanTermMonths) {
+        return monthlyInterestRate * Math.pow((1 + monthlyInterestRate), loanTermMonths);
     }
 
     // Denominator of mortgage amortization formula: (1+r)^n - 1
-    private double calculateDenominator(double interestRate, int loanTermMonths) {
-        return Math.pow((1 + interestRate), loanTermMonths) - 1;
+    private double calculateDenominator(double monthlyInterestRate, int loanTermMonths) {
+        return Math.pow((1 + monthlyInterestRate), loanTermMonths) - 1;
     }
 }
