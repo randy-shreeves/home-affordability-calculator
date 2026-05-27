@@ -1,10 +1,10 @@
 package com.randyshreeves.home_affordability_calculator.dto;
 
-public class AffordabilityResponse {
+public class HomeAffordabilityResponse {
 
     private double maxHomePrice;
 
-    public AffordabilityResponse(double maxHomePrice) {
+    public HomeAffordabilityResponse(double maxHomePrice) {
         this.maxHomePrice = maxHomePrice;
     }
 

@@ -1,6 +1,6 @@
 package com.randyshreeves.home_affordability_calculator.dto;
 
-public class AffordabilityRequest {
+public class HomeAffordabilityRequest {
 
     private double monthlyPayment;
     private double downPayment;
