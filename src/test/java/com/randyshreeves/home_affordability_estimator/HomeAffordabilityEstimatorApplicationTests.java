@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HomeAffordabilityCalculatorApplicationTests {
+class HomeAffordabilityEstimatorApplicationTests {
 
 	@Test
 	void contextLoads() {
