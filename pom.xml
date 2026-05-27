@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.randyshreeves</groupId>
-	<artifactId>home-affordability-calculator</artifactId>
+	<artifactId>home-affordability-estimator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>

@@ -1,4 +1,4 @@
-package com.randyshreeves.home_affordability_calculator.dto;
+package com.randyshreeves.home_affordability_estimator.dto;
 
 public class HomeAffordabilityResponse {
 

@@ -1,7 +1,7 @@
-package com.randyshreeves.home_affordability_calculator.controller;
+package com.randyshreeves.home_affordability_estimator.controller;
 
-import com.randyshreeves.home_affordability_calculator.dto.HomeAffordabilityRequest;
-import com.randyshreeves.home_affordability_calculator.dto.HomeAffordabilityResponse;
+import com.randyshreeves.home_affordability_estimator.dto.HomeAffordabilityRequest;
+import com.randyshreeves.home_affordability_estimator.dto.HomeAffordabilityResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
