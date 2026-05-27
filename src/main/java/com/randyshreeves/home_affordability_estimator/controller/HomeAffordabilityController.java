@@ -2,16 +2,21 @@ package com.randyshreeves.home_affordability_estimator.controller;
 
 import com.randyshreeves.home_affordability_estimator.dto.HomeAffordabilityRequest;
 import com.randyshreeves.home_affordability_estimator.dto.HomeAffordabilityResponse;
+import com.randyshreeves.home_affordability_estimator.service.HomeAffordabilityService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/affordability")
 public class HomeAffordabilityController {
 
-    @PostMapping("/calculate")
+    private final HomeAffordabilityService homeAffordabilityService;
+
+    public HomeAffordabilityController(HomeAffordabilityService homeAffordabilityService) {
+        this.homeAffordabilityService = homeAffordabilityService;
+    }
+
+    @PostMapping("/estimate")
     public HomeAffordabilityResponse calculateAffordability(@RequestBody HomeAffordabilityRequest request) {
-        System.out.println("Monthly Payment: " + request.getMonthlyPayment());
-        System.out.println("Interest Rate: " + request.getInterestRate());
-        return new HomeAffordabilityResponse(425000);
+        return homeAffordabilityService.calculateAffordability(request);
     }
 }
