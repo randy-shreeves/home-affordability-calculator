@@ -29,24 +29,34 @@ public class HomeAffordabilityService {
         double downPayment = request.getDownPayment();
         double monthlyInterestRate = request.getInterestRate() / 100 / 12;
         int loanTermMonths = request.getLoanTermYears() * 12;
-        double maxHomePrice = calculateMaxHomePrice(monthlyPayment, downPayment, monthlyInterestRate, loanTermMonths);
+        double hoaMonthlyFees = request.getHoaMonthlyFees();
+        double maxHomePrice = calculateMaxHomePrice(monthlyPayment,
+                downPayment,
+                monthlyInterestRate,
+                loanTermMonths,
+                hoaMonthlyFees);
         return new HomeAffordabilityResponse(maxHomePrice);
     }
 
     private double calculateMaxHomePrice(double monthlyPayment,
                                          double downPayment,
                                          double monthlyInterestRate,
-                                         int loanTermMonths) {
-        if (monthlyPayment < 0 || loanTermMonths <= 0) { // handles invalid mortgage configurations
+                                         int loanTermMonths,
+                                         double hoaMonthlyFees) {
+        if (monthlyPayment < 0 || loanTermMonths <= 0) { // handle invalid mortgage configurations
+            return 0;
+        }
+        double availableMortgagePayment = monthlyPayment - hoaMonthlyFees;
+        if (availableMortgagePayment <= 0) { // handle HOA being greater than desired monthly payment
             return 0;
         }
         double numerator = calculateNumerator(monthlyInterestRate, loanTermMonths);
         double denominator = calculateDenominator(monthlyInterestRate, loanTermMonths);
         double loanAmount;
         if (numerator == 0) { // handle edge case if user enters 0% interest rate
-            loanAmount = monthlyPayment * loanTermMonths;
+            loanAmount = availableMortgagePayment * loanTermMonths;
         } else {
-            loanAmount = (monthlyPayment * denominator) / numerator;
+            loanAmount = (availableMortgagePayment * denominator) / numerator;
         }
         return Math.round(loanAmount + downPayment);
     }
