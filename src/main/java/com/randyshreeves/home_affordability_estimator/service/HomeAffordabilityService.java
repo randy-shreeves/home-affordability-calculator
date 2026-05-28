@@ -38,7 +38,7 @@ public class HomeAffordabilityService {
                                          double monthlyInterestRate,
                                          int loanTermMonths) {
         if (monthlyPayment < 0) { // handle edge case if user enters negative desired monthly payment
-            return 0;
+            return downPayment;
         }
         double numerator = calculateNumerator(monthlyInterestRate, loanTermMonths);
         double denominator = calculateDenominator(monthlyInterestRate, loanTermMonths);
