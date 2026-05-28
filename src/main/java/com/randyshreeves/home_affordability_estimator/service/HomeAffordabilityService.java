@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * allowing the system to estimate the maximum home price based on a target
  * monthly payment and additional cost factors (taxes, insurance, etc.).
  * -------------------------------------------------------------------------
- * Rearranged formula (solving for P):
+ * Rearranged formula:
  * P = M * [ (1 + r)^n - 1 ] / [ r(1 + r)^n ]
  * -------------------------------------------------------------------------
  */
@@ -37,8 +37,8 @@ public class HomeAffordabilityService {
                                          double downPayment,
                                          double monthlyInterestRate,
                                          int loanTermMonths) {
-        if (monthlyPayment < 0) { // handle edge case if user enters negative desired monthly payment
-            return downPayment;
+        if (monthlyPayment < 0 || loanTermMonths <= 0) { // handles invalid mortgage configurations
+            return 0;
         }
         double numerator = calculateNumerator(monthlyInterestRate, loanTermMonths);
         double denominator = calculateDenominator(monthlyInterestRate, loanTermMonths);
