@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/affordability")
+@CrossOrigin(origins = "http://localhost:5173")
 public class HomeAffordabilityController {
 
     private final HomeAffordabilityService homeAffordabilityService;
