@@ -6,6 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+ * Expected affordability values in these tests were verified
+ * against multiple online mortgage calculators using equivalent
+ * loan inputs and monthly payment targets.
+ */
+
 public class HomeAffordabilityServiceTest {
 
     private final HomeAffordabilityService service = new HomeAffordabilityService();
