@@ -26,6 +26,7 @@ function App() {
                       monthlyPayment: Number(monthlyPayment),
                       downPayment: Number(downPayment),
                       interestRate: Number(interestRate),
+                      loanTermYears: Number(loanTermYears),
                       hoaMonthlyFees: Number(hoaMonthlyFees),
                       propertyTaxRate: Number(propertyTaxRate),
                       homeownersInsuranceRate: Number(homeownersInsuranceRate),
