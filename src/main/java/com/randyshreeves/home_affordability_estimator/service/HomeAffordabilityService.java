@@ -32,6 +32,7 @@ public class HomeAffordabilityService {
         double hoaMonthlyFees = request.getHoaMonthlyFees();
         double propertyTaxRate = request.getPropertyTaxRate() / 100 / 12;
         double homeownersInsuranceRate = request.getHomeownersInsuranceRate() / 100 / 12;
+        double pmiRate = request.getPmiRate() / 100; // conversion to monthly rate happens later
         double maxHomePrice = calculateMaxHomePrice(
                 monthlyPayment,
                 downPayment,
@@ -39,7 +40,8 @@ public class HomeAffordabilityService {
                 loanTermMonths,
                 hoaMonthlyFees,
                 propertyTaxRate,
-                homeownersInsuranceRate);
+                homeownersInsuranceRate,
+                pmiRate);
         return new HomeAffordabilityResponse(maxHomePrice);
     }
 
@@ -50,7 +52,8 @@ public class HomeAffordabilityService {
             int loanTermMonths,
             double hoaMonthlyFees,
             double propertyTaxRate,
-            double homeownersInsuranceRate) {
+            double homeownersInsuranceRate,
+            double pmiRate) {
         if (monthlyPayment < 0 || loanTermMonths <= 0) { // handle invalid mortgage configurations
             return 0;
         }
@@ -67,16 +70,43 @@ public class HomeAffordabilityService {
             maxHomePrice = (monthlyPayment * denominator) / numerator;
         }
         maxHomePrice = Math.round(maxHomePrice + downPayment);
-        double adjustedHomePrice = adjustForTaxesAndInsurance(
+        double adjustedHomePrice = adjustForAdditionalHousingCosts(
                 monthlyPayment,
                 maxHomePrice,
                 downPayment,
                 propertyTaxRate,
                 homeownersInsuranceRate,
                 monthlyInterestRate,
-                loanTermMonths
+                loanTermMonths,
+                pmiRate
         );
         return Math.round(adjustedHomePrice);
+    }
+
+    private double adjustForAdditionalHousingCosts(
+            double monthlyPayment,
+            double maxHomePrice,
+            double downPayment,
+            double propertyTaxRate,
+            double homeownersInsuranceRate,
+            double monthlyInterestRate,
+            int loanTermMonths,
+            double pmiRate) {
+        while (true) {
+            double monthlyTaxPayment = maxHomePrice * propertyTaxRate;
+            double monthlyInsurancePayment = maxHomePrice * homeownersInsuranceRate;
+            double monthlyPmiPayment = calculateMonthlyPmiPayment(maxHomePrice, downPayment, pmiRate);
+            double mortgagePayment = calculateMonthlyMortgagePayment(
+                    maxHomePrice,
+                    downPayment,
+                    monthlyInterestRate,
+                    loanTermMonths);
+            double totalMonthlyCost = mortgagePayment + monthlyTaxPayment + monthlyInsurancePayment + monthlyPmiPayment;
+            if (totalMonthlyCost <= monthlyPayment) {
+                return maxHomePrice;
+            }
+            maxHomePrice--;
+        }
     }
 
     // Numerator of mortgage amortization formula: r(1+r)^n
@@ -106,23 +136,19 @@ public class HomeAffordabilityService {
         return monthlyPayment;
     }
 
-    private double adjustForTaxesAndInsurance(
-            double monthlyPayment,
-            double maxHomePrice,
+    private double calculateMonthlyPmiPayment(
+            double homePrice,
             double downPayment,
-            double propertyTaxRate,
-            double homeownersInsuranceRate,
-            double monthlyInterestRate,
-            int loanTermMonths) {
-        while (true) {
-            double monthlyTaxPayment = maxHomePrice * propertyTaxRate;
-            double monthlyInsurancePayment = maxHomePrice * homeownersInsuranceRate;
-            double mortgagePayment = calculateMonthlyMortgagePayment(maxHomePrice, downPayment, monthlyInterestRate, loanTermMonths);
-            double totalMonthlyCost = mortgagePayment + monthlyTaxPayment + monthlyInsurancePayment;
-            if (totalMonthlyCost <= monthlyPayment) {
-                return maxHomePrice;
-            }
-            maxHomePrice--;
+            double pmiRate) {
+        double loanAmount = homePrice - downPayment;
+        if (loanAmount <= 0 || homePrice <= 0) { // handle edge case if loan amount or home price is 0
+            return 0;
         }
+        double loanToValueRatio = loanAmount / homePrice;
+        if (loanToValueRatio <= 0.80) { // PMI not required if LTV is less than 80%
+            return 0;
+        }
+        double annualPmi = loanAmount * pmiRate;
+        return annualPmi / 12;
     }
 }

@@ -80,7 +80,7 @@ public class HomeAffordabilityServiceTest {
     }
 
     @Test
-    void testAdjustmentLoop() {
+    void testAdjustForAdditionalHousingCosts() {
         HomeAffordabilityRequest request = new HomeAffordabilityRequest();
         request.setMonthlyPayment(2500);
         request.setDownPayment(50000);
@@ -89,7 +89,8 @@ public class HomeAffordabilityServiceTest {
         request.setHoaMonthlyFees(50);
         request.setPropertyTaxRate(1.2);
         request.setHomeownersInsuranceRate(0.75);
+        request.setPmiRate(0.5);
         HomeAffordabilityResponse response = service.calculateAffordability(request);
-        assertEquals(348117.0, response.getMaxHomePrice());
+        assertEquals(333263.0, response.getMaxHomePrice());
     }
 }
