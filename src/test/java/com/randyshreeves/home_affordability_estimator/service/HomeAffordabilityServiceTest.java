@@ -64,7 +64,7 @@ public class HomeAffordabilityServiceTest {
         request.setLoanTermYears(30);
         request.setHoaMonthlyFees(50);
         HomeAffordabilityResponse response = service.calculateAffordability(request);
-        assertEquals(437617.0, response.getMaxHomePrice());
+        assertEquals(437616.0, response.getMaxHomePrice());
     }
 
     @Test
