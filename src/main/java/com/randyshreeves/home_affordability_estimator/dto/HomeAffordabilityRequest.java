@@ -21,7 +21,7 @@ public class HomeAffordabilityRequest {
     private double propertyTaxRate;
 
     @PositiveOrZero(message = "Homeowner's insurance must be zero or greater.")
-    private double homeownersInsurance;
+    private double homeownersInsuranceRate;
 
     @Positive(message = "PMI rate must be zero or greater.")
     private double pmiRate;
@@ -69,12 +69,12 @@ public class HomeAffordabilityRequest {
         this.propertyTaxRate = propertyTaxRate;
     }
 
-    public double getHomeownersInsurance() {
-        return homeownersInsurance;
+    public double getHomeownersInsuranceRate() {
+        return homeownersInsuranceRate;
     }
 
-    public void setHomeownersInsurance(double homeownersInsurance) {
-        this.homeownersInsurance = homeownersInsurance;
+    public void setHomeownersInsuranceRate(double homeownersInsuranceRate) {
+        this.homeownersInsuranceRate = homeownersInsuranceRate;
     }
 
     public double getPmiRate() {

@@ -30,35 +30,53 @@ public class HomeAffordabilityService {
         double monthlyInterestRate = request.getInterestRate() / 100 / 12;
         int loanTermMonths = request.getLoanTermYears() * 12;
         double hoaMonthlyFees = request.getHoaMonthlyFees();
-        double maxHomePrice = calculateMaxHomePrice(monthlyPayment,
+        double propertyTaxRate = request.getPropertyTaxRate() / 100 / 12;
+        double homeownersInsuranceRate = request.getHomeownersInsuranceRate() / 100 / 12;
+        double maxHomePrice = calculateMaxHomePrice(
+                monthlyPayment,
                 downPayment,
                 monthlyInterestRate,
                 loanTermMonths,
-                hoaMonthlyFees);
+                hoaMonthlyFees,
+                propertyTaxRate,
+                homeownersInsuranceRate);
         return new HomeAffordabilityResponse(maxHomePrice);
     }
 
-    private double calculateMaxHomePrice(double monthlyPayment,
-                                         double downPayment,
-                                         double monthlyInterestRate,
-                                         int loanTermMonths,
-                                         double hoaMonthlyFees) {
+    private double calculateMaxHomePrice(
+            double monthlyPayment,
+            double downPayment,
+            double monthlyInterestRate,
+            int loanTermMonths,
+            double hoaMonthlyFees,
+            double propertyTaxRate,
+            double homeownersInsuranceRate) {
         if (monthlyPayment < 0 || loanTermMonths <= 0) { // handle invalid mortgage configurations
             return 0;
         }
-        double availableMortgagePayment = monthlyPayment - hoaMonthlyFees;
-        if (availableMortgagePayment <= 0) { // handle HOA being greater than desired monthly payment
+        monthlyPayment -= hoaMonthlyFees;
+        if (monthlyPayment <= 0) { // handle HOA being greater than desired monthly payment
             return 0;
         }
         double numerator = calculateNumerator(monthlyInterestRate, loanTermMonths);
         double denominator = calculateDenominator(monthlyInterestRate, loanTermMonths);
-        double loanAmount;
+        double maxHomePrice;
         if (numerator == 0) { // handle edge case if user enters 0% interest rate
-            loanAmount = availableMortgagePayment * loanTermMonths;
+            maxHomePrice = monthlyPayment * loanTermMonths;
         } else {
-            loanAmount = (availableMortgagePayment * denominator) / numerator;
+            maxHomePrice = (monthlyPayment * denominator) / numerator;
         }
-        return Math.round(loanAmount + downPayment);
+        maxHomePrice = Math.round(maxHomePrice + downPayment);
+        double adjustedHomePrice = adjustForTaxesAndInsurance(
+                monthlyPayment,
+                maxHomePrice,
+                downPayment,
+                propertyTaxRate,
+                homeownersInsuranceRate,
+                monthlyInterestRate,
+                loanTermMonths
+        );
+        return Math.round(adjustedHomePrice);
     }
 
     // Numerator of mortgage amortization formula: r(1+r)^n
@@ -69,5 +87,42 @@ public class HomeAffordabilityService {
     // Denominator of mortgage amortization formula: (1+r)^n - 1
     private double calculateDenominator(double monthlyInterestRate, int loanTermMonths) {
         return Math.pow((1 + monthlyInterestRate), loanTermMonths) - 1;
+    }
+
+    private double calculateMonthlyMortgagePayment(
+            double homePrice,
+            double downPayment,
+            double monthlyInterestRate,
+            int loanTermMonths) {
+        double monthlyPayment;
+        double loanAmount = homePrice - downPayment;
+        if (monthlyInterestRate == 0) {
+            monthlyPayment = loanAmount / loanTermMonths;
+        } else {
+            double numerator = calculateNumerator(monthlyInterestRate, loanTermMonths);
+            double denominator = calculateDenominator(monthlyInterestRate, loanTermMonths);
+            monthlyPayment = loanAmount * numerator / denominator;
+        }
+        return monthlyPayment;
+    }
+
+    private double adjustForTaxesAndInsurance(
+            double monthlyPayment,
+            double maxHomePrice,
+            double downPayment,
+            double propertyTaxRate,
+            double homeownersInsuranceRate,
+            double monthlyInterestRate,
+            int loanTermMonths) {
+        while (true) {
+            double monthlyTaxPayment = maxHomePrice * propertyTaxRate;
+            double monthlyInsurancePayment = maxHomePrice * homeownersInsuranceRate;
+            double mortgagePayment = calculateMonthlyMortgagePayment(maxHomePrice, downPayment, monthlyInterestRate, loanTermMonths);
+            double totalMonthlyCost = mortgagePayment + monthlyTaxPayment + monthlyInsurancePayment;
+            if (totalMonthlyCost <= monthlyPayment) {
+                return maxHomePrice;
+            }
+            maxHomePrice--;
+        }
     }
 }
