@@ -43,7 +43,8 @@ public class HomeAffordabilityService {
                 homeownersInsuranceRate,
                 pmiRate
         );
-        return new HomeAffordabilityResponse(maxHomePrice);
+        long roundedHomePrice = Math.round(maxHomePrice);
+        return new HomeAffordabilityResponse(roundedHomePrice);
     }
 
     private double calculateMaxHomePrice(
@@ -74,7 +75,7 @@ public class HomeAffordabilityService {
         } else {
             maxHomePrice = (availableMonthlyBudget * denominator) / numerator;
         }
-        maxHomePrice = Math.round(maxHomePrice + downPayment);
+        maxHomePrice = maxHomePrice + downPayment;
         double adjustedHomePrice = adjustForAdditionalHousingCosts(
                 availableMonthlyBudget,
                 maxHomePrice,
@@ -85,7 +86,7 @@ public class HomeAffordabilityService {
                 loanTermMonths,
                 pmiRate
         );
-        return Math.round(adjustedHomePrice);
+        return adjustedHomePrice;
     }
 
     private double adjustForAdditionalHousingCosts(

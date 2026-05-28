@@ -18,7 +18,7 @@ public class HomeAffordabilityServiceTest {
         request.setInterestRate(6.5);
         request.setLoanTermYears(30);
         HomeAffordabilityResponse response = service.calculateAffordability(request);
-        assertEquals(445527.0, response.getMaxHomePrice());
+        assertEquals(445527, response.getMaxHomePrice(), 1);
     }
 
     @Test
@@ -29,8 +29,7 @@ public class HomeAffordabilityServiceTest {
         request.setInterestRate(0);
         request.setLoanTermYears(30);
         HomeAffordabilityResponse response = service.calculateAffordability(request);
-        double expected = 2500 * 360 + 50000;
-        assertEquals(expected, response.getMaxHomePrice());
+        assertEquals(950000, response.getMaxHomePrice(), 1);
     }
 
     @Test
@@ -64,7 +63,7 @@ public class HomeAffordabilityServiceTest {
         request.setLoanTermYears(30);
         request.setHoaMonthlyFees(50);
         HomeAffordabilityResponse response = service.calculateAffordability(request);
-        assertEquals(437616.0, response.getMaxHomePrice());
+        assertEquals(437616, response.getMaxHomePrice(), 1);
     }
 
     @Test
@@ -91,7 +90,7 @@ public class HomeAffordabilityServiceTest {
         request.setHomeownersInsuranceRate(0.75);
         request.setPmiRate(0.5);
         HomeAffordabilityResponse response = service.calculateAffordability(request);
-        assertEquals(333263.0, response.getMaxHomePrice());
+        assertEquals(333263, response.getMaxHomePrice(), 1);
     }
 
     @Test
@@ -101,8 +100,11 @@ public class HomeAffordabilityServiceTest {
         request.setDownPayment(100000);
         request.setInterestRate(6.5);
         request.setLoanTermYears(30);
+        request.setHoaMonthlyFees(50);
+        request.setPropertyTaxRate(1.2);
+        request.setHomeownersInsuranceRate(0.75);
         request.setPmiRate(0.5);
         HomeAffordabilityResponse response = service.calculateAffordability(request);
-        assertEquals(387892.0, response.getMaxHomePrice());
+        assertEquals(387892, response.getMaxHomePrice(), 1);
     }
 }

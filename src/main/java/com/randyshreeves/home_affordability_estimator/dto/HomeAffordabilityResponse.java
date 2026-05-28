@@ -2,13 +2,13 @@ package com.randyshreeves.home_affordability_estimator.dto;
 
 public class HomeAffordabilityResponse {
 
-    private double maxHomePrice;
+    private long maxHomePrice;
 
-    public HomeAffordabilityResponse(double maxHomePrice) {
+    public HomeAffordabilityResponse(long maxHomePrice) {
         this.maxHomePrice = maxHomePrice;
     }
 
-    public double getMaxHomePrice() {
+    public long getMaxHomePrice() {
         return maxHomePrice;
     }
 }
