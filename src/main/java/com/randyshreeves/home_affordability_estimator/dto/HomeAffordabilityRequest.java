@@ -23,10 +23,10 @@ public class HomeAffordabilityRequest {
     @PositiveOrZero(message = "Homeowner's insurance must be zero or greater.")
     private double homeownersInsuranceRate;
 
-    @Positive(message = "PMI rate must be zero or greater.")
+    @PositiveOrZero(message = "PMI rate must be zero or greater.")
     private double pmiRate;
 
-    @Positive(message = "HOA monthly fees must be zero or greater.")
+    @PositiveOrZero(message = "HOA monthly fees must be zero or greater.")
     private double hoaMonthlyFees;
 
     public double getMonthlyPayment() {

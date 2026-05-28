@@ -93,4 +93,16 @@ public class HomeAffordabilityServiceTest {
         HomeAffordabilityResponse response = service.calculateAffordability(request);
         assertEquals(333263.0, response.getMaxHomePrice());
     }
+
+    @Test
+    void testPmiNotAppliedAtTwentyPercentDown() {
+        HomeAffordabilityRequest request = new HomeAffordabilityRequest();
+        request.setMonthlyPayment(2500);
+        request.setDownPayment(100000);
+        request.setInterestRate(6.5);
+        request.setLoanTermYears(30);
+        request.setPmiRate(0.5);
+        HomeAffordabilityResponse response = service.calculateAffordability(request);
+        assertEquals(387892.0, response.getMaxHomePrice());
+    }
 }
