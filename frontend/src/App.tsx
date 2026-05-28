@@ -53,6 +53,7 @@ function App() {
               <br />
               <input
                   type="number"
+                  min="0"
                   placeholder="Monthly Payment"
                   value={monthlyPayment}
                   onChange={(e) => setMonthlyPayment(e.target.value)}
@@ -64,6 +65,7 @@ function App() {
             <br />
             <input
               type="number"
+              min="0"
               placeholder="Down Payment"
               value={downPayment}
               onChange={(e) => setDownPayment(e.target.value)}
@@ -75,6 +77,7 @@ function App() {
               <br />
               <input
                   type="number"
+                  min="0"
                   placeholder="Interest Rate"
                   value={interestRate}
                   onChange={(e) => setInterestRate(e.target.value)}
@@ -99,6 +102,7 @@ function App() {
               <br />
               <input
                   type="number"
+                  min="0"
                   placeholder="HOA Monthly Fee"
                   value={hoaMonthlyFees}
                   onChange={(e) => setHoaMonthlyFees(e.target.value)}
@@ -110,6 +114,7 @@ function App() {
               <br />
               <input
                   type="number"
+                  min="0"
                   placeholder="Property Tax Rate (%)"
                   value={propertyTaxRate}
                   onChange={(e) => setPropertyTaxRate(e.target.value)}
@@ -121,6 +126,7 @@ function App() {
               <br />
               <input
                   type="number"
+                  min="0"
                   placeholder="Homeowners Insurance Rate(%)"
                   value={homeownersInsuranceRate}
                   onChange={(e) => setHomeownersInsuranceRate(e.target.value)}
@@ -132,6 +138,7 @@ function App() {
               <br />
               <input
                   type="number"
+                  min="0"
                   placeholder="PMI Rate(%)"
                   value={pmiRate}
                   onChange={(e) => setPmiRate(e.target.value)}
@@ -145,13 +152,14 @@ function App() {
           Calculate
         </button>
 
-          <div style={{ marginTop: "30px" }}>
-              <h2>Estimated Max Home Price:</h2>
-
-              <div style={{ fontSize: "24px", fontWeight: "bold" }}>
-                  ${result.toLocaleString()}
-              </div>
-          </div>
+          {result !== null && !isNaN(result) ? (
+              <h2>
+                  Estimated Max Home Price: $
+                  {result.toLocaleString()}
+              </h2>
+          ) : (
+              <h2>Estimated Max Home Price: $0</h2>
+          )}
 
       </div>
   );
