@@ -1,14 +1,32 @@
 package com.randyshreeves.home_affordability_estimator.dto;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+
 public class HomeAffordabilityRequest {
 
+    @PositiveOrZero(message = "Monthly payment must be zero or greater")
     private double monthlyPayment;
+
+    @PositiveOrZero(message = "Down payment must be zero or greater")
     private double downPayment;
+
+    @PositiveOrZero(message = "Interest rate must be zero or greater")
     private double interestRate;
+
+    @Positive(message = "Loan term must be greater than zero")
     private int loanTermYears;
+
+    @PositiveOrZero(message = "Property tax rate must be zero or greater.")
     private double propertyTaxRate;
+
+    @PositiveOrZero(message = "Homeowner's insurance must be zero or greater.")
     private double homeownersInsurance;
+
+    @Positive(message = "PMI rate must be zero or greater.")
     private double pmiRate;
+
+    @Positive(message = "HOA monthly fees must be zero or greater.")
     private double hoaMonthlyFees;
 
     public double getMonthlyPayment() {
