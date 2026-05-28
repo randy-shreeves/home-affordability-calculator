@@ -41,7 +41,8 @@ public class HomeAffordabilityService {
                 hoaMonthlyFees,
                 propertyTaxRate,
                 homeownersInsuranceRate,
-                pmiRate);
+                pmiRate
+        );
         return new HomeAffordabilityResponse(maxHomePrice);
     }
 
@@ -53,25 +54,29 @@ public class HomeAffordabilityService {
             double hoaMonthlyFees,
             double propertyTaxRate,
             double homeownersInsuranceRate,
-            double pmiRate) {
-        if (monthlyPayment < 0 || loanTermMonths <= 0) { // handle invalid mortgage configurations
+            double pmiRate
+    ) {
+        // handle invalid mortgage configurations
+        if (monthlyPayment < 0 || loanTermMonths <= 0) {
             return 0;
         }
-        monthlyPayment -= hoaMonthlyFees;
-        if (monthlyPayment <= 0) { // handle HOA being greater than desired monthly payment
+        double availableMonthlyBudget = monthlyPayment - hoaMonthlyFees;
+        // handle HOA being greater than desired monthly payment
+        if (availableMonthlyBudget <= 0) {
             return 0;
         }
         double numerator = calculateNumerator(monthlyInterestRate, loanTermMonths);
         double denominator = calculateDenominator(monthlyInterestRate, loanTermMonths);
         double maxHomePrice;
-        if (numerator == 0) { // handle edge case if user enters 0% interest rate
-            maxHomePrice = monthlyPayment * loanTermMonths;
+        // handle edge case if user enters 0% interest rate
+        if (numerator == 0) {
+            maxHomePrice = availableMonthlyBudget * loanTermMonths;
         } else {
-            maxHomePrice = (monthlyPayment * denominator) / numerator;
+            maxHomePrice = (availableMonthlyBudget * denominator) / numerator;
         }
         maxHomePrice = Math.round(maxHomePrice + downPayment);
         double adjustedHomePrice = adjustForAdditionalHousingCosts(
-                monthlyPayment,
+                availableMonthlyBudget,
                 maxHomePrice,
                 downPayment,
                 propertyTaxRate,
@@ -91,7 +96,9 @@ public class HomeAffordabilityService {
             double homeownersInsuranceRate,
             double monthlyInterestRate,
             int loanTermMonths,
-            double pmiRate) {
+            double pmiRate
+    ) {
+        // Reduce affordability until monthly costs reach desired monthly payment
         while (true) {
             double monthlyTaxPayment = maxHomePrice * propertyTaxRate;
             double monthlyInsurancePayment = maxHomePrice * homeownersInsuranceRate;
@@ -101,7 +108,11 @@ public class HomeAffordabilityService {
                     downPayment,
                     monthlyInterestRate,
                     loanTermMonths);
-            double totalMonthlyCost = mortgagePayment + monthlyTaxPayment + monthlyInsurancePayment + monthlyPmiPayment;
+            double totalMonthlyCost =
+                    mortgagePayment +
+                    monthlyTaxPayment +
+                    monthlyInsurancePayment +
+                    monthlyPmiPayment;
             if (totalMonthlyCost <= monthlyPayment) {
                 return maxHomePrice;
             }
@@ -123,7 +134,8 @@ public class HomeAffordabilityService {
             double homePrice,
             double downPayment,
             double monthlyInterestRate,
-            int loanTermMonths) {
+            int loanTermMonths
+    ) {
         double monthlyPayment;
         double loanAmount = homePrice - downPayment;
         if (monthlyInterestRate == 0) {
@@ -139,13 +151,16 @@ public class HomeAffordabilityService {
     private double calculateMonthlyPmiPayment(
             double homePrice,
             double downPayment,
-            double pmiRate) {
+            double pmiRate
+    ) {
         double loanAmount = homePrice - downPayment;
-        if (loanAmount <= 0 || homePrice <= 0) { // handle edge case if loan amount or home price is 0
+        // handle edge case if loan amount or home price is 0
+        if (loanAmount <= 0 || homePrice <= 0) {
             return 0;
         }
         double loanToValueRatio = loanAmount / homePrice;
-        if (loanToValueRatio <= 0.80) { // PMI not required if LTV is less than 80%
+        // PMI not required if LTV is less than 80%
+        if (loanToValueRatio <= 0.80) {
             return 0;
         }
         double annualPmi = loanAmount * pmiRate;
