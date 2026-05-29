@@ -279,9 +279,18 @@ function App() {
 
             </div>
 
-            <button onClick={calculateAffordability}>
-                Calculate
-            </button>
+            <div style={{ marginTop: "10px" }}>
+                <button onClick={calculateAffordability}>
+                    Calculate
+                </button>
+
+                <button
+                    onClick={resetForm}
+                    style={{ marginLeft: "10px" }}
+                >
+                    Reset
+                </button>
+            </div>
 
             <div style={{ marginTop: "30px" }}>
                 <h2>
