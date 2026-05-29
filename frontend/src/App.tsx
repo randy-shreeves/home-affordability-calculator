@@ -2,18 +2,25 @@ import { useState } from "react";
 
 function App() {
 
-  const [monthlyPayment, setMonthlyPayment] = useState("");
-  const [downPayment, setDownPayment] = useState("");
-  const [interestRate, setInterestRate] = useState("");
+  const [monthlyPayment, setMonthlyPayment] = useState("0");
+  const [downPayment, setDownPayment] = useState("0");
+  const [interestRate, setInterestRate] = useState("0");
   const [loanTermYears, setLoanTermYears] = useState<number>(30);
-  const [hoaMonthlyFees, setHoaMonthlyFees] = useState("");
-  const [propertyTaxRate, setPropertyTaxRate] = useState("");
-  const [homeownersInsuranceRate, setHomeownersInsuranceRate] = useState("");
-  const [pmiRate, setPmiRate] = useState("");
+  const [hoaMonthlyFees, setHoaMonthlyFees] = useState("0");
+  const [propertyTaxRate, setPropertyTaxRate] = useState("0");
+  const [homeownersInsuranceRate, setHomeownersInsuranceRate] = useState("0");
+  const [pmiRate, setPmiRate] = useState("0");
+    const [errorMessage, setErrorMessage] = useState("");
 
   const [result, setResult] = useState<number>(0);
 
   async function calculateAffordability() {
+      const validationError = validateInputs();
+      if (validationError) {
+          setErrorMessage(validationError);
+          return;
+      }
+      setErrorMessage("");
       try {
           const response = await fetch(
               "http://localhost:8080/api/affordability/estimate",
@@ -43,18 +50,67 @@ function App() {
       }
   }
 
+    function hasMoreThanTwoDecimals(value: string): boolean {
+        if (!value.includes(".")) {
+            return false;
+        }
+        const decimalPortion = value.split(".")[1];
+        return decimalPortion.length > 2;
+    }
+
+    function validateInputs(): string {
+
+        const fields = [
+            monthlyPayment,
+            downPayment,
+            interestRate,
+            hoaMonthlyFees,
+            propertyTaxRate,
+            homeownersInsuranceRate,
+            pmiRate
+        ];
+        for (const field of fields) {
+            if (field.trim() === "") {
+                return "All fields must contain numeric values.";
+            }
+            const numericValue = Number(field);
+            if (isNaN(numericValue)) {
+                return "All fields must be numeric.";
+            }
+            if (hasMoreThanTwoDecimals(field)) {
+                return "Values cannot exceed 2 decimal places.";
+            }
+            if (numericValue < 0) {
+                return "Values cannot be negative.";
+            }
+        }
+        return "";
+    }
+
   return (
+
       <div style={{ padding: "2rem", fontFamily: "Arial" }}>
 
         <h1>Home Affordability Estimator</h1>
 
+          {errorMessage && (
+              <div
+                  style={{
+                      color: "red",
+                      marginBottom: "20px",
+                      fontWeight: "bold"
+                  }}
+              >
+                  {errorMessage}
+              </div>
+          )}
+
           <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="monthlyPayment">Monthly Payment</label>
+              <label htmlFor="monthlyPayment">Desired Monthly Payment</label>
               <br />
               <input
                   type="number"
                   min="0"
-                  placeholder="Monthly Payment"
                   value={monthlyPayment}
                   onChange={(e) => setMonthlyPayment(e.target.value)}
               />
@@ -66,7 +122,6 @@ function App() {
             <input
               type="number"
               min="0"
-              placeholder="Down Payment"
               value={downPayment}
               onChange={(e) => setDownPayment(e.target.value)}
           />
@@ -78,7 +133,6 @@ function App() {
               <input
                   type="number"
                   min="0"
-                  placeholder="Interest Rate"
                   value={interestRate}
                   onChange={(e) => setInterestRate(e.target.value)}
               />
@@ -103,7 +157,6 @@ function App() {
               <input
                   type="number"
                   min="0"
-                  placeholder="HOA Monthly Fee"
                   value={hoaMonthlyFees}
                   onChange={(e) => setHoaMonthlyFees(e.target.value)}
               />
@@ -115,7 +168,6 @@ function App() {
               <input
                   type="number"
                   min="0"
-                  placeholder="Property Tax Rate (%)"
                   value={propertyTaxRate}
                   onChange={(e) => setPropertyTaxRate(e.target.value)}
               />
@@ -127,7 +179,6 @@ function App() {
               <input
                   type="number"
                   min="0"
-                  placeholder="Homeowners Insurance Rate(%)"
                   value={homeownersInsuranceRate}
                   onChange={(e) => setHomeownersInsuranceRate(e.target.value)}
               />
@@ -139,7 +190,6 @@ function App() {
               <input
                   type="number"
                   min="0"
-                  placeholder="PMI Rate(%)"
                   value={pmiRate}
                   onChange={(e) => setPmiRate(e.target.value)}
               />
