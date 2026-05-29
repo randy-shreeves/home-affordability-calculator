@@ -50,12 +50,12 @@ function App() {
       }
   }
 
-    function hasMoreThanTwoDecimals(value: string): boolean {
+    function validateDecimalPlaces(value: string, maxDecimals: number): boolean {
         if (!value.includes(".")) {
-            return false;
+            return true;
         }
-        const decimalPortion = value.split(".")[1];
-        return decimalPortion.length > 2;
+        const decimalPart = value.split(".")[1];
+        return decimalPart.length <= maxDecimals;
     }
 
     function validateInputs(): string {
@@ -77,14 +77,52 @@ function App() {
             if (isNaN(numericValue)) {
                 return "All fields must be numeric.";
             }
-            if (hasMoreThanTwoDecimals(field)) {
-                return "Values cannot exceed 2 decimal places.";
-            }
             if (numericValue < 0) {
                 return "Values cannot be negative.";
             }
         }
+        if (!validateDecimalPlaces(monthlyPayment, 2)) {
+            return "Monthly payment cannot exceed 2 decimal places.";
+        }
+
+        if (!validateDecimalPlaces(downPayment, 2)) {
+            return "Down payment cannot exceed 2 decimal places.";
+        }
+
+        if (!validateDecimalPlaces(hoaMonthlyFees, 2)) {
+            return "HOA fees cannot exceed 2 decimal places.";
+        }
+        if (!validateDecimalPlaces(interestRate, 4)) {
+            return "Interest rate cannot exceed 4 decimal places.";
+        }
+
+        if (!validateDecimalPlaces(propertyTaxRate, 4)) {
+            return "Property tax rate cannot exceed 4 decimal places.";
+        }
+
+        if (!validateDecimalPlaces(homeownersInsuranceRate, 4)) {
+            return "Insurance rate cannot exceed 4 decimal places.";
+        }
+
+        if (!validateDecimalPlaces(pmiRate, 4)) {
+            return "PMI rate cannot exceed 4 decimal places.";
+        }
         return "";
+    }
+
+    function resetForm() {
+        setMonthlyPayment("0");
+        setDownPayment("0");
+        setInterestRate("0");
+        setHoaMonthlyFees("0");
+        setPropertyTaxRate("0");
+        setHomeownersInsuranceRate("0");
+        setPmiRate("0");
+
+        setLoanTermYears(30);
+
+        setErrorMessage("");
+        setResult(0);
     }
 
     return (
