@@ -87,132 +87,173 @@ function App() {
         return "";
     }
 
-  return (
+    return (
+        <div style={{ padding: "2rem", fontFamily: "Arial" }}>
 
-      <div style={{ padding: "2rem", fontFamily: "Arial" }}>
+            <h1>Home Affordability Estimator</h1>
 
-        <h1>Home Affordability Estimator</h1>
+            {errorMessage && (
+                <div
+                    style={{
+                        color: "red",
+                        marginBottom: "20px",
+                        fontWeight: "bold"
+                    }}
+                >
+                    {errorMessage}
+                </div>
+            )}
 
-          {errorMessage && (
-              <div
-                  style={{
-                      color: "red",
-                      marginBottom: "20px",
-                      fontWeight: "bold"
-                  }}
-              >
-                  {errorMessage}
-              </div>
-          )}
+            <div
+                style={{
+                    display: "flex",
+                    gap: "50px",
+                    marginBottom: "20px"
+                }}
+            >
 
-          <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="monthlyPayment">Desired Monthly Payment</label>
-              <br />
-              <input
-                  type="number"
-                  min="0"
-                  value={monthlyPayment}
-                  onChange={(e) => setMonthlyPayment(e.target.value)}
-              />
-          </div>
+                {/* Left Column */}
+                <div>
 
-        <div style={{ marginBottom: "10px" }}>
-            <label htmlFor="downPayment">Down Payment</label>
-            <br />
-            <input
-              type="number"
-              min="0"
-              value={downPayment}
-              onChange={(e) => setDownPayment(e.target.value)}
-          />
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="monthlyPayment">
+                            Desired Monthly Payment
+                        </label>
+                        <br />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={monthlyPayment}
+                            onChange={(e) => setMonthlyPayment(e.target.value)}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="downPayment">
+                            Down Payment
+                        </label>
+                        <br />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={downPayment}
+                            onChange={(e) => setDownPayment(e.target.value)}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="interestRate">
+                            Interest Rate (%)
+                        </label>
+                        <br />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={interestRate}
+                            onChange={(e) => setInterestRate(e.target.value)}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="loanTermYears">
+                            Loan Term
+                        </label>
+                        <br />
+                        <select
+                            id="loanTermYears"
+                            value={loanTermYears}
+                            onChange={(e) =>
+                                setLoanTermYears(Number(e.target.value))
+                            }
+                        >
+                            <option value={30}>30 Year</option>
+                            <option value={15}>15 Year</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                {/* Right Column */}
+                <div>
+
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="hoaMonthlyFees">
+                            HOA Monthly Fees
+                        </label>
+                        <br />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={hoaMonthlyFees}
+                            onChange={(e) => setHoaMonthlyFees(e.target.value)}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="propertyTaxRate">
+                            Property Tax Rate (%)
+                        </label>
+                        <br />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={propertyTaxRate}
+                            onChange={(e) => setPropertyTaxRate(e.target.value)}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="homeownersInsuranceRate">
+                            Homeowners Insurance Rate (%)
+                        </label>
+                        <br />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={homeownersInsuranceRate}
+                            onChange={(e) =>
+                                setHomeownersInsuranceRate(e.target.value)
+                            }
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: "10px" }}>
+                        <label htmlFor="pmiRate">
+                            PMI Rate (%)
+                        </label>
+                        <br />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={pmiRate}
+                            onChange={(e) => setPmiRate(e.target.value)}
+                        />
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button onClick={calculateAffordability}>
+                Calculate
+            </button>
+
+            <div style={{ marginTop: "30px" }}>
+                <h2>
+                    Estimated Max Home Price: $
+                    {result.toLocaleString()}
+                </h2>
+            </div>
+
         </div>
-
-          <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="interestRate">Interest Rate</label>
-              <br />
-              <input
-                  type="number"
-                  min="0"
-                  value={interestRate}
-                  onChange={(e) => setInterestRate(e.target.value)}
-              />
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="loanTermYears">Loan Term</label>
-              <br />
-              <select
-                  id="loanTermYears"
-                  value={loanTermYears}
-                  onChange={(e) => setLoanTermYears(Number(e.target.value))}
-              >
-                  <option value={30}>30 Year</option>
-                  <option value={15}>15 Year</option>
-              </select>
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="HOA monthly fees">HOA Monthly Fee</label>
-              <br />
-              <input
-                  type="number"
-                  min="0"
-                  value={hoaMonthlyFees}
-                  onChange={(e) => setHoaMonthlyFees(e.target.value)}
-              />
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="propertyTaxRate">Property Tax Rate (%)</label>
-              <br />
-              <input
-                  type="number"
-                  min="0"
-                  value={propertyTaxRate}
-                  onChange={(e) => setPropertyTaxRate(e.target.value)}
-              />
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="homeownersInsuranceRate">Homeowners Insurance Rate (%)</label>
-              <br />
-              <input
-                  type="number"
-                  min="0"
-                  value={homeownersInsuranceRate}
-                  onChange={(e) => setHomeownersInsuranceRate(e.target.value)}
-              />
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="pmiRate">PMI Rate (%)</label>
-              <br />
-              <input
-                  type="number"
-                  min="0"
-                  value={pmiRate}
-                  onChange={(e) => setPmiRate(e.target.value)}
-              />
-          </div>
-
-
-          <br />
-
-        <button onClick={calculateAffordability}>
-          Calculate
-        </button>
-
-          {result !== null && !isNaN(result) ? (
-              <h2>
-                  Estimated Max Home Price: $
-                  {result.toLocaleString()}
-              </h2>
-          ) : (
-              <h2>Estimated Max Home Price: $0</h2>
-          )}
-
-      </div>
-  );
+    );
 }
 
 export default App;
