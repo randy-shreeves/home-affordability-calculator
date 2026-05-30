@@ -24,3 +24,32 @@ A full-stack web application that estimates the maximum home price a buyer can a
 * Spring Boot
 * Maven
 * JUnit
+
+## Running Locally
+
+### Backend
+
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+Backend runs on:
+
+```text
+http://localhost:8080
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs on:
+
+```text
+http://localhost:5173
+```
