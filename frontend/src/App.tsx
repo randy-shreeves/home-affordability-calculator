@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 function App() {
+
     const MAX_INPUT_VALUE = 999_999_999;
   const [monthlyPayment, setMonthlyPayment] = useState("0");
   const [downPayment, setDownPayment] = useState("0");
@@ -12,6 +13,7 @@ function App() {
   const [pmiRate, setPmiRate] = useState("0");
   const [errorMessage, setErrorMessage] = useState("");
   const [result, setResult] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function calculateAffordability() {
       const validationError = validateInputs();
@@ -20,6 +22,7 @@ function App() {
           return;
       }
       setErrorMessage("");
+      setIsLoading(true);
       try {
           const response = await fetch(
               "http://localhost:8080/api/affordability/estimate",
@@ -46,6 +49,8 @@ function App() {
       } catch (error) {
           console.error(error);
           setResult(0);
+      } finally {
+          setIsLoading(false);
       }
   }
 
@@ -155,7 +160,8 @@ function App() {
                         <br />
                         <input
                             type="number"
-                            min="0"
+                            step="1"
+                            disabled={isLoading}
                             value={monthlyPayment}
                             onChange={(e) => setMonthlyPayment(e.target.value)}
                         />
@@ -168,7 +174,8 @@ function App() {
                         <br />
                         <input
                             type="number"
-                            min="0"
+                            step="1"
+                            disabled={isLoading}
                             value={downPayment}
                             onChange={(e) => setDownPayment(e.target.value)}
                         />
@@ -181,7 +188,8 @@ function App() {
                         <br />
                         <input
                             type="number"
-                            min="0"
+                            step="0.1"
+                            disabled={isLoading}
                             value={interestRate}
                             onChange={(e) => setInterestRate(e.target.value)}
                         />
@@ -194,6 +202,7 @@ function App() {
                         <br />
                         <select
                             id="loanTermYears"
+                            disabled={isLoading}
                             value={loanTermYears}
                             onChange={(e) =>
                                 setLoanTermYears(Number(e.target.value))
@@ -216,7 +225,8 @@ function App() {
                         <br />
                         <input
                             type="number"
-                            min="0"
+                            step="1"
+                            disabled={isLoading}
                             value={hoaMonthlyFees}
                             onChange={(e) => setHoaMonthlyFees(e.target.value)}
                         />
@@ -229,7 +239,8 @@ function App() {
                         <br />
                         <input
                             type="number"
-                            min="0"
+                            step="0.1"
+                            disabled={isLoading}
                             value={propertyTaxRate}
                             onChange={(e) => setPropertyTaxRate(e.target.value)}
                         />
@@ -242,7 +253,8 @@ function App() {
                         <br />
                         <input
                             type="number"
-                            min="0"
+                            step="0.1"
+                            disabled={isLoading}
                             value={homeownersInsuranceRate}
                             onChange={(e) =>
                                 setHomeownersInsuranceRate(e.target.value)
@@ -257,7 +269,8 @@ function App() {
                         <br />
                         <input
                             type="number"
-                            min="0"
+                            step="0.1"
+                            disabled={isLoading}
                             value={pmiRate}
                             onChange={(e) => setPmiRate(e.target.value)}
                         />
@@ -268,12 +281,16 @@ function App() {
             </div>
 
             <div style={{ marginTop: "10px" }}>
-                <button onClick={calculateAffordability}>
-                    Calculate
+                <button
+                    onClick={calculateAffordability}
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Loading..." : "Calculate"}
                 </button>
 
                 <button
                     onClick={resetForm}
+                    disabled={isLoading}
                     style={{ marginLeft: "10px" }}
                 >
                     Reset
