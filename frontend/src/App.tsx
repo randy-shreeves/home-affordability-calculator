@@ -63,7 +63,6 @@ function App() {
     }
 
     function validateInputs(): string {
-
         const fields = [
             monthlyPayment,
             downPayment,
@@ -126,7 +125,7 @@ function App() {
     }
 
     return (
-        <div style={{ padding: "2rem", fontFamily: "Arial" }}>
+        <div style={{ padding: "32px", fontFamily: "Arial" }}>
 
             <h1>Home Affordability Estimator</h1>
 
@@ -154,13 +153,10 @@ function App() {
                 <div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="monthlyPayment">
-                            Desired Monthly Payment
-                        </label>
+                        <label>Desired Monthly Payment</label>
                         <br />
                         <input
                             type="number"
-                            step="1"
                             disabled={isLoading}
                             value={monthlyPayment}
                             onChange={(e) => setMonthlyPayment(e.target.value)}
@@ -168,13 +164,10 @@ function App() {
                     </div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="downPayment">
-                            Down Payment
-                        </label>
+                        <label>Down Payment</label>
                         <br />
                         <input
                             type="number"
-                            step="1"
                             disabled={isLoading}
                             value={downPayment}
                             onChange={(e) => setDownPayment(e.target.value)}
@@ -182,13 +175,10 @@ function App() {
                     </div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="interestRate">
-                            Interest Rate (%)
-                        </label>
+                        <label>Interest Rate (%)</label>
                         <br />
                         <input
                             type="number"
-                            step="0.1"
                             disabled={isLoading}
                             value={interestRate}
                             onChange={(e) => setInterestRate(e.target.value)}
@@ -196,12 +186,9 @@ function App() {
                     </div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="loanTermYears">
-                            Loan Term
-                        </label>
+                        <label>Loan Term</label>
                         <br />
                         <select
-                            id="loanTermYears"
                             disabled={isLoading}
                             value={loanTermYears}
                             onChange={(e) =>
@@ -219,13 +206,10 @@ function App() {
                 <div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="hoaMonthlyFees">
-                            HOA Monthly Fees
-                        </label>
+                        <label>HOA Monthly Fees</label>
                         <br />
                         <input
                             type="number"
-                            step="1"
                             disabled={isLoading}
                             value={hoaMonthlyFees}
                             onChange={(e) => setHoaMonthlyFees(e.target.value)}
@@ -233,13 +217,10 @@ function App() {
                     </div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="propertyTaxRate">
-                            Property Tax Rate (%)
-                        </label>
+                        <label>Property Tax Rate (%)</label>
                         <br />
                         <input
                             type="number"
-                            step="0.1"
                             disabled={isLoading}
                             value={propertyTaxRate}
                             onChange={(e) => setPropertyTaxRate(e.target.value)}
@@ -247,13 +228,10 @@ function App() {
                     </div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="homeownersInsuranceRate">
-                            Homeowners Insurance Rate (%)
-                        </label>
+                        <label>Homeowners Insurance Rate (%)</label>
                         <br />
                         <input
                             type="number"
-                            step="0.1"
                             disabled={isLoading}
                             value={homeownersInsuranceRate}
                             onChange={(e) =>
@@ -263,13 +241,10 @@ function App() {
                     </div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="pmiRate">
-                            PMI Rate (%)
-                        </label>
+                        <label>PMI Rate (%)</label>
                         <br />
                         <input
                             type="number"
-                            step="0.1"
                             disabled={isLoading}
                             value={pmiRate}
                             onChange={(e) => setPmiRate(e.target.value)}
