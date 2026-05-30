@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function App() {
-
+    const MAX_INPUT_VALUE = 999_999_999;
   const [monthlyPayment, setMonthlyPayment] = useState("0");
   const [downPayment, setDownPayment] = useState("0");
   const [interestRate, setInterestRate] = useState("0");
@@ -10,8 +10,7 @@ function App() {
   const [propertyTaxRate, setPropertyTaxRate] = useState("0");
   const [homeownersInsuranceRate, setHomeownersInsuranceRate] = useState("0");
   const [pmiRate, setPmiRate] = useState("0");
-    const [errorMessage, setErrorMessage] = useState("");
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [result, setResult] = useState<number>(0);
 
   async function calculateAffordability() {
@@ -80,30 +79,28 @@ function App() {
             if (numericValue < 0) {
                 return "Values cannot be negative.";
             }
+            if (numericValue > MAX_INPUT_VALUE) {
+                return `Values cannot exceed ${MAX_INPUT_VALUE.toLocaleString()}.`;
+            }
         }
         if (!validateDecimalPlaces(monthlyPayment, 2)) {
             return "Monthly payment cannot exceed 2 decimal places.";
         }
-
         if (!validateDecimalPlaces(downPayment, 2)) {
             return "Down payment cannot exceed 2 decimal places.";
         }
-
         if (!validateDecimalPlaces(hoaMonthlyFees, 2)) {
             return "HOA fees cannot exceed 2 decimal places.";
         }
         if (!validateDecimalPlaces(interestRate, 4)) {
             return "Interest rate cannot exceed 4 decimal places.";
         }
-
         if (!validateDecimalPlaces(propertyTaxRate, 4)) {
             return "Property tax rate cannot exceed 4 decimal places.";
         }
-
         if (!validateDecimalPlaces(homeownersInsuranceRate, 4)) {
             return "Insurance rate cannot exceed 4 decimal places.";
         }
-
         if (!validateDecimalPlaces(pmiRate, 4)) {
             return "PMI rate cannot exceed 4 decimal places.";
         }
@@ -118,9 +115,7 @@ function App() {
         setPropertyTaxRate("0");
         setHomeownersInsuranceRate("0");
         setPmiRate("0");
-
         setLoanTermYears(30);
-
         setErrorMessage("");
         setResult(0);
     }
@@ -161,7 +156,6 @@ function App() {
                         <input
                             type="number"
                             min="0"
-                            step="0.01"
                             value={monthlyPayment}
                             onChange={(e) => setMonthlyPayment(e.target.value)}
                         />
@@ -175,7 +169,6 @@ function App() {
                         <input
                             type="number"
                             min="0"
-                            step="0.01"
                             value={downPayment}
                             onChange={(e) => setDownPayment(e.target.value)}
                         />
@@ -189,7 +182,6 @@ function App() {
                         <input
                             type="number"
                             min="0"
-                            step="0.01"
                             value={interestRate}
                             onChange={(e) => setInterestRate(e.target.value)}
                         />
@@ -225,7 +217,6 @@ function App() {
                         <input
                             type="number"
                             min="0"
-                            step="0.01"
                             value={hoaMonthlyFees}
                             onChange={(e) => setHoaMonthlyFees(e.target.value)}
                         />
@@ -239,7 +230,6 @@ function App() {
                         <input
                             type="number"
                             min="0"
-                            step="0.01"
                             value={propertyTaxRate}
                             onChange={(e) => setPropertyTaxRate(e.target.value)}
                         />
@@ -253,7 +243,6 @@ function App() {
                         <input
                             type="number"
                             min="0"
-                            step="0.01"
                             value={homeownersInsuranceRate}
                             onChange={(e) =>
                                 setHomeownersInsuranceRate(e.target.value)
@@ -269,7 +258,6 @@ function App() {
                         <input
                             type="number"
                             min="0"
-                            step="0.01"
                             value={pmiRate}
                             onChange={(e) => setPmiRate(e.target.value)}
                         />
